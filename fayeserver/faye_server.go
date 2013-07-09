@@ -9,6 +9,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/serverhorror/uuid"
+	// "math/rand"
+	// "strconv"
 	"sync"
 )
 
@@ -24,6 +26,7 @@ type FayeServer struct {
 Instantiate a new faye server
 */
 func NewFayeServer() *FayeServer {
+	fmt.Println("NEW FAYE SERVER")
 	return &FayeServer{Connections: []Connection{},
 		Subscriptions: make(map[string][]Client),
 		Clients:       make(map[string]Client)}
@@ -34,6 +37,7 @@ func NewFayeServer() *FayeServer {
 
 */
 func (f *FayeServer) publishToChannel(channel, data string) {
+	fmt.Println("publishToChannel")
 	subs, ok := f.Subscriptions[channel]
 	if ok {
 		f.multiplexWrite(subs, data)
@@ -92,10 +96,21 @@ type FayeMessage struct {
 
 func (f *FayeServer) HandleMessage(message []byte, c chan string) ([]byte, error) {
 	// parse message JSON
+	fmt.Println("IT CAME TO HANDLEMESSAGE!!!")
 	fm := FayeMessage{}
 	err := json.Unmarshal(message, &fm)
 
+	fmt.Println("THIS IS THE MESSAGE FROM HANDLE MESSAGE: ", string(message))
+
 	if err != nil {
+		ar := []FayeMessage{}
+		err = json.Unmarshal(message, &ar)
+		if err != nil {
+			fmt.Println("ERROR PARSIN JSON ARRAY!!!")
+			fmt.Println("ERRR", err)
+		} else {
+			fm = ar[0]
+		}
 		fmt.Println("Error parsing message json")
 	}
 
@@ -139,6 +154,7 @@ type FayeResponse struct {
 	Error                    string            `json:"error,omitempty"`
 	Id                       string            `json:"id,omitempty"`
 	Data                     interface{}       `json:"data,omitempty"`
+  Foo                      string            `json:"foo,omitempty"`
 }
 
 /*
@@ -171,14 +187,19 @@ Bayeux Handshake response
 */
 
 func (f *FayeServer) handshake() ([]byte, error) {
+	fmt.Println("IT CAME TO FAYESERVER HANDSHAKE!")
+	// r := rand.New(rand.NewSource(99))
 	// build response
 	resp := FayeResponse{
-		Channel:                  "/meta/handshake",
-		Successful:               true,
-		Version:                  "1.0",
-		SupportedConnectionTypes: []string{"websocket"},
+		Id:         "10", //strconv.Itoa(r.Int31()),
+		Channel:    "/meta/handshake",
+		Successful: true,
+		Version:    "1.0",
+		// SupportedConnectionTypes: []string{"websocket"},
+		SupportedConnectionTypes: []string{"long-polling", "cross-origin-long-polling", "callback-polling", "websocket", "in-process"},
 		ClientId:                 generateClientId(),
-		Advice:                   map[string]string{"reconnect": "retry"},
+		Advice:                   map[string]string{"reconnect": "retry", "timeout": "6000", "interval": "0"},
+    Foo: "somethingBar",
 	}
 
 	// wrap it in an array & convert to json
@@ -205,6 +226,7 @@ Example response
 func (f *FayeServer) connect(clientId string) ([]byte, error) {
 	// TODO: setup client connection state
 
+	fmt.Println("IT CAME TO FAYESERVER CONNECT!")
 	resp := FayeResponse{
 		Channel:    "/meta/connect",
 		Successful: true,
@@ -260,6 +282,7 @@ Example response
 */
 
 func (f *FayeServer) subscribe(clientId, subscription string, c chan string) ([]byte, error) {
+	fmt.Println("IT CAME TO FAYE SUBSCRIBE")
 
 	// subscribe the client to the given channel	
 	if len(subscription) == 0 {
@@ -340,6 +363,7 @@ Example response
 
 */
 func (f *FayeServer) publish(channel, id string, data interface{}) ([]byte, error) {
+	fmt.Println("PUBLISH")
 
 	//convert data back to json string
 	message := FayeResponse{

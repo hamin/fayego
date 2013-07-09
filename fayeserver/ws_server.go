@@ -56,6 +56,7 @@ func (c *Connection) reader(f *FayeServer) {
 	for {
 		op, r, err := c.ws.NextReader()
 		if err != nil {
+			fmt.Println("ITS BREAKING IN WS READER!")
 			break
 		}
 		switch op {
@@ -124,6 +125,8 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 	ws, err := websocket.Upgrade(w, r.Header, nil, 1024, 1024)
 	if _, ok := err.(websocket.HandshakeError); ok {
 		http.Error(w, "Not a websocket handshake", 400)
+		fmt.Println("NOT A WEBSOCKET HANDSHAKE")
+		serveLongPolling(f, w, r)
 		return
 	} else if err != nil {
 		fmt.Println(err)

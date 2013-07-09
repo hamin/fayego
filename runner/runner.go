@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/pcrawfor/fayego/fayeserver"
+	// "github.com/pcrawfor/fayego/fayeserver"
+	"../fayeserver"
 )
 
 func main() {
-	fayeserver.Start(":4001")
+	fayeserver.Start(":3000")
 }
