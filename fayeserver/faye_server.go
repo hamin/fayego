@@ -149,7 +149,7 @@ type FayeResponse struct {
 	Version                  string            `json:"version,omitempty"`
 	SupportedConnectionTypes []string          `json:"supportedConnectionTypes,omitempty"`
 	ClientId                 string            `json:"clientId,omitempty"`
-	Advice                   map[string]string `json:"advice,omitempty"`
+	Advice                   map[string]interface{} `json:"advice,omitempty"`
 	Subscription             string            `json:"subscription,omitempty"`
 	Error                    string            `json:"error,omitempty"`
 	Id                       string            `json:"id,omitempty"`
@@ -197,7 +197,7 @@ func (f *FayeServer) handshake() ([]byte, error) {
 		// SupportedConnectionTypes: []string{"websocket"},
 		SupportedConnectionTypes: []string{"long-polling", "cross-origin-long-polling", "callback-polling", "websocket", "in-process"},
 		ClientId:                 generateClientId(),
-		Advice:                   map[string]string{"reconnect": "retry", "timeout": "60000", "interval": "0"},
+		Advice:                   map[string]interface{}{"reconnect": "retry", "timeout": 60000, "interval": 0},
 	}
 
 	// wrap it in an array & convert to json
@@ -231,7 +231,7 @@ func (f *FayeServer) connect(clientId string) ([]byte, error) {
 		Successful: true,
 		Error:      "",
 		ClientId:   clientId,
-		Advice:     map[string]string{"reconnect": "retry"},
+		Advice:     map[string]interface{}{"reconnect": "retry"},
 	}
 
 	// wrap it in an array & convert to json

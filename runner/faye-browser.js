@@ -1037,6 +1037,8 @@ Faye.Client = Faye.Class({
       this._transport = transport;
       this._transport.cookies = this._cookies;
       this._transport.headers = this._headers;
+      console.log('THIS IS HEADERS FROM _selectTransport');
+      console.log(this._transport.headers);
 
       transport.bind('down', function() {
         if (this._transportUp !== undefined && !this._transportUp) return;
@@ -1054,9 +1056,15 @@ Faye.Client = Faye.Class({
 
   _send: function(message, callback, context) {
     console.log("SEND WAS SENT!!!!");
+    console.log("THIS IS CALLBACK FROM SEND ");
+    console.log(callback);
+    console.log("THIS IS CONTEXT FROM SEND");
+    console.log(context);
 
     message.id = this._generateMessageId();
     if (callback) this._responseCallbacks[message.id] = [callback, context];
+    console.log("THIS IS RESPONSECALLBACKS: ");
+    console.log(this._responseCallbacks);
 
     this.pipeThroughExtensions('outgoing', message, function(message) {
       console.log('THIS IS MESSAGE FROM _send FUNCTION:');
