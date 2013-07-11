@@ -664,10 +664,14 @@ Faye.extend(Faye.Channel, {
     },
 
     distributeMessage: function(message) {
+      console.log('IT CAME TO distributeMessage');
+      console.log(message);
       var channels = Faye.Channel.expand(message.channel);
 
       for (var i = 0, n = channels.length; i < n; i++) {
         var channel = this._channels[channels[i]];
+        console.log('THIS IS A CHANNEL IN distributeMessage loop');
+        console.log(channel);
         if (channel) channel.trigger('message', message.data);
       }
     }
@@ -1011,6 +1015,8 @@ Faye.Client = Faye.Class({
   },
 
   receiveMessage: function(message) {
+    console.log("WE ARE IN receiveMessage");
+    console.log(message);
     this.pipeThroughExtensions('incoming', message, function(message) {
       if (!message) return;
 
@@ -1084,8 +1090,10 @@ Faye.Client = Faye.Class({
 
   _handleAdvice: function(advice) {
     Faye.extend(this._advice, advice);
+    console.log('IT CAME to _handleAdvice');
 
     if (this._advice.reconnect === this.HANDSHAKE && this._state !== this.DISCONNECTED) {
+      console.log("WE ARE NOT CONNECTED inside _handleAdvice");
       this._state    = this.UNCONNECTED;
       this._clientId = null;
       this._cycleConnection();
@@ -1093,6 +1101,8 @@ Faye.Client = Faye.Class({
   },
 
   _deliverMessage: function(message) {
+    console.log('IT CAME TO _deliverMessage');
+    console.log(message);
     if (!message.channel || message.data === undefined) return;
     this.info('Client ? calling listeners for ? with ?', this._clientId, message.channel, message.data);
     this._channels.distributeMessage(message);

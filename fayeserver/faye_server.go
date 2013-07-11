@@ -190,7 +190,7 @@ func (f *FayeServer) handshake() ([]byte, error) {
 	// r := rand.New(rand.NewSource(99))
 	// build response
 	resp := FayeResponse{
-		Id:         "10", //strconv.Itoa(r.Int31()),
+		Id:         "1", //strconv.Itoa(r.Int31()),
 		Channel:    "/meta/handshake",
 		Successful: true,
 		Version:    "1.0",
