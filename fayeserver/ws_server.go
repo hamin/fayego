@@ -118,13 +118,17 @@ func (c *Connection) writer(f *FayeServer) {
 }
 
 func serveWs(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("THIS IS REQUEST URL: ", r.URL.Path)
+	fmt.Println("THIS IS REQUEST RAW QUERY: ", r.URL.RawQuery)
+	fmt.Println("THIS IS REQUEST HEADER!!! ", r.Header)
+
 	if r.Method != "GET" {
 		http.Error(w, "Method not allowed", 405)
 		return
 	}
 	ws, err := websocket.Upgrade(w, r.Header, nil, 1024, 1024)
 	if _, ok := err.(websocket.HandshakeError); ok {
-		http.Error(w, "Not a websocket handshake", 400)
+		//TODO: move this as a condition of the servelongpolling handling. http.Error(w, "Not a websocket handshake", 400)
 		fmt.Println("NOT A WEBSOCKET HANDSHAKE")
 		serveLongPolling(f, w, r)
 		return

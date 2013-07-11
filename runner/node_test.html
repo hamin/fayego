@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-  <title>GO Faye Test</title>
+  <title>NODE Faye Test</title>
 
   <style type="text/css">
     body {
@@ -24,7 +24,7 @@
 
 </head>
 <body>
-  <h1 id="heading">Connection Test</h1>
+  <h1 id="heading">NODE Connection Test</h1>
   <h2>Connection: <span id="test1">PENDING</span></h2>
   <h2>Subscription: <span id="test2">PENDING</span></h2>
   <h2>Sending: <span id="test3">PENDING</span></h2>
@@ -39,7 +39,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-  <title>GO Faye Test</title>
+  <title>Faye Test</title>
   <script src="faye-browser.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
     // function randomString(sChrs, iLen) {
@@ -54,7 +54,7 @@
     // Faye.XHRTransport.WebSocket.isUsable = function($, _, c) { c(false) };
     // Faye.JSONPTransport.WebSocket.isUsable = function($, _, c) { c(false) };
     Faye.Logging.logLevel = 0;
-    var client = new Faye.Client('http://192.168.9.41:3000/faye');
+    var client = new Faye.Client('http://192.168.9.41:4000/faye');
     client.disable('websocket');
     // client.Transport.WebSocket.isUsable = function($, _, c) { c(true) };
     // client.XHRTransport.WebSocket.isUsable = function($, _, c) { c(false) };
@@ -131,7 +131,7 @@
 
 </head>
 <body>
-  <h1 id="heading">GO Connection Test</h1>
+  <h1 id="heading">Connection Test</h1>
   <h2>Connection: <span id="test1">PENDING</span></h2>
   <h2>Subscription: <span id="test2">PENDING</span></h2>
   <h2>Sending: <span id="test3">PENDING</span></h2>

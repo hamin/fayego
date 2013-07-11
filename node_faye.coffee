@@ -1,7 +1,7 @@
 Faye = require("faye")
 Faye.Logging.logLevel = 0
 server = new Faye.NodeAdapter(mount: "/faye")
-server.listen 3000
+server.listen 4000
 
 # client = new Faye.Client("http://192.168.9.41:3000/faye")
 

@@ -2,17 +2,16 @@ package fayeserver
 
 import (
 	"fmt"
-	"io"
+  // "io"
 	// "io/ioutil"
 	"net/http"
 	// "os"
-	// "encoding/json"
-	"text/template"
-	"time"
+	//"encoding/json"
+	// "text/template"
+	// "time"
 )
 
 func serveLongPolling(f *FayeServer, w http.ResponseWriter, r *http.Request) {
-	fmt.Println("THIS IS REQUEST HEADER!!! ", r.Header)
 	fmt.Println("PLZ WORK ", r.FormValue("message"))
 	jsonMessage := r.FormValue("message")
 	jsonpParam := r.FormValue("jsonp")
@@ -30,22 +29,27 @@ func serveLongPolling(f *FayeServer, w http.ResponseWriter, r *http.Request) {
 		fmt.Println("HTTP SERVER ERROR: ", error)
 		return
 	} else {
-		finalResponse := jsonpParam + "(" + template.JSEscapeString(string(response)) + ");"
+		finalResponse := jsonpParam + "(" + string(response) + ");"
 		fmt.Println("THIS IS OUR HTTP RESPONSE: %v", finalResponse)
 		fmt.Println("THIS IS THE W HEADERS: ", w.Header())
-		n, err := io.WriteString(w, finalResponse)
-
-		fmt.Println("THIS IS N: ", n)
-		fmt.Println("THIS IS ERROR: ", err)
+		//n, err := io.WriteString(w, finalResponse)
+		fmt.Fprint(w, finalResponse)
+		//fmt.Println("sending.")
+		//send <- finalResponse
+		//fmt.Println("THIS IS N: ", n)
+		//fmt.Println("THIS IS ERROR: ", err)
 	}
 
-	select {
-	case <-time.After(60e9):
-		fmt.Println("IT CAME TO TIMEOUT!!!!")
-		io.WriteString(w, "Timeout!\n")
-	case msg := <-send:
-		fmt.Println("IT CAME TO MSG SEND PART")
-		io.WriteString(w, msg)
-	}
+	/*
+	for {
+		select {
+		case <-time.After(60e9):
+			fmt.Println("IT CAME TO TIMEOUT!!!!")
+			io.WriteString(w, "Timeout!\n")
+		case msg := <-send:
+			fmt.Println("IT CAME TO MSG SEND PART")
+			io.WriteString(w, msg)
+		}	
+	}*/
 
 }

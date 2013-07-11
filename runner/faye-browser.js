@@ -1059,6 +1059,10 @@ Faye.Client = Faye.Class({
     if (callback) this._responseCallbacks[message.id] = [callback, context];
 
     this.pipeThroughExtensions('outgoing', message, function(message) {
+      console.log('THIS IS MESSAGE FROM _send FUNCTION:');
+      console.log(message)
+      console.log("THIS IS this._transport form _send FUCNTION:");
+      console.log(this._transport);
       if (!message) return;
       this._transport.send(message, this._advice.timeout / 1000);
     }, this);
@@ -1126,7 +1130,14 @@ Faye.Transport = Faye.extend(Faye.Class({
     this._outbox.push(message);
     this._timeout = timeout;
 
+    console.log("ITS COMING TO TRANSPORT SEND FUNCTION!!!!!");
+    console.log("THIS IS MESSAGE FORM TRANSPORT SEND FUNCTION!!!");
+    console.log(message);
+    console.log("THIS IS TIMEOUT FROM TRANSPORT SEND FUNCTION");
+    console.log(timeout);
+
     if (message.channel === Faye.Channel.HANDSHAKE)
+      console.log('IT CAME TO HANDSHAKE CHANNEL IN trANSPORT SEND FUNC');
       return this.addTimeout('publish', 0.01, this.flush, this);
 
     if (message.channel === Faye.Channel.CONNECT)
@@ -2208,11 +2219,24 @@ Faye.Transport.JSONP = Faye.extend(Faye.Class(Faye.Transport, {
   _cbCount: 0,
 
   getCallbackName: function() {
+    console.log("IT CAME TO getCallbackName");
+    console.log(this);
     this._cbCount += 1;
     return '__jsonp' + this._cbCount + '__';
   },
 
   isUsable: function(client, endpoint, callback, context) {
+    console.log('IT CAME TO isUsable');
+    
+    console.log("client");
+    console.log(client);
+    console.log("endpoint");
+    console.log(endpoint);
+    console.log("callback");
+    console.log(callback);
+    console.log("context");
+    console.log(context);
+
     callback.call(context, true);
   }
 });
